@@ -20,6 +20,7 @@ class RoleController extends Controller {
 
     public function index() {
         $roles = $this->roleModel->findAll();
+            $this->logger?->log('Role Management', 'Viewed Role List');
         $this->renderView('roles.index', [
             'pageTitle' => '角色管理',
             'roles' => $roles
@@ -43,6 +44,7 @@ class RoleController extends Controller {
         
         $permissions = $this->roleModel->getPermissions($id);
 
+            $this->logger?->log('Role Management', 'Viewed Role Details', ['role_id' => $id]);
         $this->renderView('roles.show', [
             'pageTitle' => '查看角色: ' . htmlspecialchars($role['name']),
             'role' => $role,

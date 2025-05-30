@@ -34,6 +34,7 @@ class LinkController extends Controller {
             }
         }
 
+        $this->logger?->log('Link Management', 'Viewed Link List', ['project_id' => $projectId]);
         $this->renderView('links.index', [
             'pageTitle' => $pageTitle,
             'links' => $links,
@@ -60,6 +61,7 @@ class LinkController extends Controller {
         $detectionRecordModel = $this->loadModel('DetectionRecord');
         $records = $detectionRecordModel->findByLinkId($id);
 
+        $this->logger?->log('Link Management', 'Viewed Link Details', ['link_id' => $id]);
         $this->renderView('links.show', [
             'pageTitle' => '查看链接: ' . htmlspecialchars($link['name']),
             'link' => $link,
@@ -99,6 +101,7 @@ class LinkController extends Controller {
         $_SESSION['flash_message'] = "Link detection initiated. Review URL check: " . ($results['review_url_check']['status'] ?? 'N/A') . 
                                    ". Landing URL check: " . ($results['landing_url_check']['status'] ?? 'N/A');
         
+        $this->logger?->log('Link Management', 'Triggered Manual Link Check', ['link_id' => $id]);
         // Redirect back to the link show page
         $this->redirect('index.php?controller=link&action=show&id=' . $id);
     }

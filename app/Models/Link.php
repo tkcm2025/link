@@ -10,14 +10,16 @@ class Link extends Model {
     public function findAll($projectId = null) {
         $sql = "
             SELECT 
-                l.id, l.name, l.review_url, l.landing_url, l.last_check_time, l.status,
+                l.id, l.name, l.review_url, l.landing_url, l.last_check_time, l.status, l.created_by,
                 p.name as project_name, u.username as created_by_username, l.project_id, l.created_at
             FROM links l
             JOIN projects p ON l.project_id = p.id
             JOIN users u ON l.created_by = u.id
         ";
         if ($projectId) {
-            $sql .= " WHERE l.project_id = :project_id";
+            $sql .= " WHERE l.project_id = :project_id AND l.status = 1"; // Also filter by active status if project specific
+        } else {
+            $sql .= " WHERE l.status = 1"; // Default to only active links
         }
         $sql .= " ORDER BY l.created_at DESC";
         

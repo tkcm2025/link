@@ -20,6 +20,7 @@ class ProjectController extends Controller {
 
     public function index() {
         $projects = $this->projectModel->findAll();
+            $this->logger?->log('Project Management', 'Viewed Project List');
         $this->renderView('projects.index', [
             'pageTitle' => '项目管理',
             'projects' => $projects
@@ -45,6 +46,7 @@ class ProjectController extends Controller {
             $linkModel = $this->loadModel('Link');
             $links = $linkModel->findByProjectId($id);
 
+            $this->logger?->log('Project Management', 'Viewed Project Details', ['project_id' => $id]);
             $this->renderView('projects.show', [
                 'pageTitle' => '查看项目: ' . htmlspecialchars($project['name']),
                 'project' => $project,

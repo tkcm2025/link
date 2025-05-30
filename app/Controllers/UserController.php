@@ -21,6 +21,7 @@ class UserController extends Controller {
 
     public function index() {
         $users = $this->userModel->findAll();
+            $this->logger?->log('User Management', 'Viewed User List');
         $this->renderView('users.index', [
             'pageTitle' => '用户管理',
             'users' => $users

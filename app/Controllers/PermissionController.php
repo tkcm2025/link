@@ -21,6 +21,7 @@ class PermissionController extends Controller {
 
     public function index() {
         $permissions = $this->permissionModel->findAll();
+            $this->logger?->log('Permission Management', 'Viewed Permission List');
         $this->renderView('permissions.index', [
             'pageTitle' => '权限管理',
             'permissions' => $permissions
