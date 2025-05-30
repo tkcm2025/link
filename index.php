@@ -42,14 +42,54 @@ if (file_exists(BASE_PATH . '/vendor/autoload.php')) {
 // Load Configuration
 // The Database class already defines CONFIG_PATH and loads it.
 // We can load it here as well if other parts of index.php need it directly.
+// if (file_exists(BASE_PATH . '/config/config.php')) {
+//    $config = require BASE_PATH . '/config/config.php';
+// } else {
+//    die("FATAL ERROR: Configuration file missing. Please ensure config/config.php exists.");
+// }
+
+// Load base configuration file (defaults, DB credentials for initial connection)
 if (file_exists(BASE_PATH . '/config/config.php')) {
-    $config = require BASE_PATH . '/config/config.php';
+    $baseConfig = require BASE_PATH . '/config/config.php';
 } else {
-    die("FATAL ERROR: Configuration file missing. Please ensure config/config.php exists.");
+    die("FATAL ERROR: Base configuration file missing (config/config.php).");
 }
 
-// Define BASE_URL from config for convenience
-define('BASE_URL', $config['system']['base_url']);
+// Initialize Database connection (needed to load system_configs)
+try {
+    // App\Classes\Database::getInstance()->getConnection(); // This ensures DB is connected if not already
+    // The SystemConfig model will get its own connection via its parent Model constructor
+} catch (\PDOException $e) {
+    die("FATAL ERROR: Database connection failed while trying to load system configurations: " . $e->getMessage());
+}
+
+// Load system configurations from database
+$systemConfigModel = new App\Models\SystemConfig($baseConfig); // Pass baseConfig if model needs it
+                                                                // Or ensure SystemConfig can get DB connection
+                                                                // Model constructor should handle DB init.
+$dbSettings = $systemConfigModel->getAllAsAssociativeArray();
+
+// Merge database settings into the base config. DB settings override file settings.
+// Note: This is a shallow merge for top-level keys from system_configs.
+// For nested structures like 'email', 'sms', 'wechat' from system_configs,
+// they will replace the entire corresponding key from config.php if they exist in dbSettings.
+$config = array_merge($baseConfig, $dbSettings);
+
+// Make $config globally accessible for now (though dependency injection is better)
+$GLOBALS['config'] = $config;
+
+
+// Define BASE_URL from the now merged config
+define('BASE_URL', $config['system']['base_url'] ?? 'http://localhost');
+
+
+// Update constants if they are used directly by old code, or refactor old code
+// It's better to use the $config array throughout the application.
+if (isset($config['boce_api_key'])) define('BOCE_API_KEY', $config['boce_api_key']);
+// ... and so on for other critical constants derived from $config if necessary.
+
+// The rest of index.php (session_start, routing, etc.)
+// ...
 
 // Basic Routing
 // Example: http://localhost/index.php?controller=auth&action=login

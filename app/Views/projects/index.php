@@ -16,7 +16,7 @@
         <a href="<?php echo BASE_URL; ?>/index.php?controller=role&action=index">角色管理</a>
         <a href="<?php echo BASE_URL; ?>/index.php?controller=permission&action=index">权限管理</a>
         <a href="<?php echo BASE_URL; ?>/index.php?controller=project&action=index" class="active">项目管理</a>
-        <!-- Add other navigation links here -->
+        <a href="<?php echo BASE_URL; ?>/index.php?controller=setting&action=index">系统配置</a>
         <a href="<?php echo BASE_URL; ?>/index.php?controller=auth&action=logout" style="float:right;">退出登录</a>
     </nav>
 
