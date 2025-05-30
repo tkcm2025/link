@@ -19,9 +19,12 @@
         <h1>链接检测管理系统</h1>
     </header>
     <nav>
-        <a href="<?php echo BASE_URL; ?>/index.php?controller=home&action=index">仪表盘</a>
-        <!-- Add more navigation links here as modules are developed -->
-        <a href="<?php echo BASE_URL; ?>/index.php?controller=auth&action=logout">退出登录</a>
+            <a href="<?php echo BASE_URL; ?>/index.php?controller=home&action=index" class="active">仪表盘</a>
+            <a href="<?php echo BASE_URL; ?>/index.php?controller=user&action=index">用户管理</a>
+            <a href="<?php echo BASE_URL; ?>/index.php?controller=role&action=index">角色管理</a>
+            <a href="<?php echo BASE_URL; ?>/index.php?controller=permission&action=index">权限管理</a>
+            <a href="<?php echo BASE_URL; ?>/index.php?controller=project&action=index">项目管理</a>
+            <a href="<?php echo BASE_URL; ?>/index.php?controller=auth&action=logout" style="float:right;">退出登录</a>
     </nav>
     <div class="container">
         <h2><?php echo isset($data['pageTitle']) ? htmlspecialchars($data['pageTitle']) : '仪表盘'; ?></h2>
